@@ -1,0 +1,32 @@
+URxvt.font: xft:Inconsolata:Regular:size=13
+URxvt.boldFont: xft:Inconsolata:Bold:size=13
+URxvt.perl-ext-common: selection-to-clipboard
+
+URxvt*borderless: 1
+URxvt.internalBorder:  0
+URxvt.externalBorder:  0
+URxvt*scrollBar:            false
+URxvt*saveLines:  5000
+URxvt*fading:  5
+
+*color0: #212121
+*color1: #b7141e
+*color2: #5f875f
+*color3: #ff875f
+*color4: #134eb2
+*color5: #7500ba
+*color6: #0e707c
+*color7: #eeeeee
+*color8: #424242
+*color9: #e83a3f
+*color10: #56c400
+*color11: #afd700
+*color12: #53a4f3
+*color13: #af87d7
+*color14: #26bad1
+*color15: #d8d8d8
+*background: #222221
+*foreground: #e4e4e4
+*cursorColor: #16aec9
+*highlightTextColor: #3d3d3d
+*highlightColor: #dedede

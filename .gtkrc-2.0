@@ -1,0 +1,14 @@
+# -- THEME AUTO-WRITTEN DO NOT EDIT
+include "/usr/share/themes/Materia/gtk-2.0/gtkrc"
+
+style "user-font" {
+	font_name = "Roboto 9.75"
+}
+
+widget_class "*" style "user-font"
+
+gtk-font-name="Roboto 9.75"
+
+include "/home/nmadmin/.gtkrc.mine"
+
+# -- THEME AUTO-WRITTEN DO NOT EDIT
