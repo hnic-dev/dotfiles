@@ -10,18 +10,16 @@
       exiftool             # reading image fileheaders
       file                 # file inspection
       curl                 # http interaction
-#      dig                  # DNS lookup tool
       tree                 # directory tree inspector
       ripgrep              # alternative to grep
       #fzf                  # fuzzy matcher used for reverse bash search
       htop                 # performance inspection
       #powertop             # battery drain inspection
       #psmisc               # needed for `pkill`
-      #pandoc               # document converter
-      #usbutils             # `lsusb` tool used for displaying usb information
-      #docker_compose       # easy and simple docker orchestration
-      #imagemagick          # image resizing and manipulation
-      #wmctrl               # controlling windows (i.e. shutdown firefox on boot)
+      pandoc               # document converter
+      usbutils             # `lsusb` tool used for displaying usb information
+      docker_compose       # easy and simple docker orchestration
+      imagemagick          # image resizing and manipulation
       gnumake
       traceroute
       lsof
@@ -30,10 +28,10 @@
 
       # development
       #sqlite  # small file-oriented sql database
-      #go      # golang programming language
-      #dep     # depedency manager for golang
-      #gotools # helper cli for golang (auto importing and more)
-      #golangci-lint
+      go      # golang programming language
+      dep     # depedency manager for golang
+      gotools # helper cli for golang (auto importing and more)
+      golangci-lint
 
       # extraction + compression
       unrar
@@ -42,9 +40,6 @@
       dtrx
       pv
       p7zip
-
-      # typography
-      #texlive.combined.scheme-full
     ];
   };
 }

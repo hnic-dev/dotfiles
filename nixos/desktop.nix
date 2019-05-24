@@ -48,17 +48,15 @@
 
       # mail
       #thunderbird
+      #TODO imap sync & astroid
 
       # disks
-      gnome3.gnome-disk-utility # lovely simple tool for formatting and partioning drives
+      gnome3.gnome-disk-utility # simple tool for formatting and partioning drives
       #gptfdisk                  # disk partitioner 
       #udiskie                   # auto
 
-      # lockscreen
-      #imagemagick               # image manipulation from cli
-      #i3lock-color              # lock screen
-      #xss-lock                  # daemon to handle dimming and lock screen
-      
+      imagemagick               # image manipulation from cli
+
       # screenshotting
       #scrot                     # take screenshots
       #nomacs                    # yet another image manipulation app
@@ -70,33 +68,26 @@
       #xfce.xfce4-settings
 
       # applications
-      #rofi                      # replacement for dmenu (smart application opener)
       wirelesstools             # basic wireless tools
-      #playerctl                 # tool for start/stop/skip music
       arandr                    # UI for xrandr (display controlling)
-      #sxhkd                     # handle all the keyboard presses
       gnome3.networkmanagerapplet
-#      ffmpeg
+      ffmpeg
       networkmanagerapplet      # gui networking manager
       blueman                   # bluetooth manager
       firefox                   # web browsing
       chromium                  # web browser alternative
-      #spotify                   # stream music
-      #pinta                     # user-friendly image manipulation
-#      gimp                      # user-friendly image manipulation
-#      inkscape                  # vector graphics manipulation
+      gimp                      # user-friendly image manipulation
+      inkscape                  # vector graphics manipulation
       gnome3.evince             # pdf viewer
       poppler_utils             # pdf editing tools
-      #pdfpc                     # pdf presentation tool
-      #remmina                   # rdp, vnc client
-#      vlc                       # video player
-      #simplescreenrecorder      # screen recording
-#      kdenlive                  # video manipulation
+      remmina                   # rdp, vnc client
+      vlc                       # video player
+      kdenlive                  # video manipulation
       vagrant                   # orchestration of virtualbox
       libreoffice-fresh         # needed for opening microsoft products!
 #      wireshark                 # traffic analysis
       xlibs.xmodmap             # swap buttons on the keyboard around
-#      transmission-gtk
+      transmission-gtk
     ];
   };
 
@@ -118,7 +109,7 @@
   security.polkit.enable = true;
   services = {
     #unclutter-xfixes.enable = true;
-    xrdp.enable = true;
+    urxvtd.enable = true;
     # needed for plank
     #dbus.packages = with pkgs; [ gnome3.dconf ];
     #bamf.enable = true;
