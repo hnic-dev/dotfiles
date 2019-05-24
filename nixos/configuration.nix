@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ./commandline.nix
-    ./desktop.nix
+    ./laptop.nix
     ./network.nix
   ];
 
