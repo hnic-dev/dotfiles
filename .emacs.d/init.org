@@ -1,0 +1,222 @@
+#+TITLE: Emacs configuration file
+#+AUTHOR: HNIC
+#+BABEL: :cache yes
+#+LATEX_HEADER: \usepackage{parskip}
+#+LATEX_HEADER: \usepackage{inconsolata}
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+PROPERTY: header-args :tangle yes
+
+* Configurations
+** Meta
+
+   When this configuration is loaded for the first time, the =init.el= is
+   the file that is loaded. It looks like this:
+
+   #+BEGIN_SRC emacs-lisp :tangle no
+   ;; This file replaces itself with the actual configuration at first run.
+
+   ;; We can't tangle without org!
+   (require 'org)
+   ;; Open the configuration
+   (find-file (concat user-emacs-directory "init.org"))
+   ;; tangle it
+   (org-babel-tangle)
+   ;; load it
+   (load-file (concat user-emacs-directory "init.el"))
+   ;; finally byte-compile it
+   (byte-compile-file (concat user-emacs-directory "init.el"))
+   #+END_SRC
+
+   Lexical scoping for the init-file is needed, it can be specified in the
+   header. This is the first line of the actual configuration:
+
+   #+BEGIN_SRC emacs-lisp
+   ;;; -*- lexical-binding: t -*-
+   #+END_SRC
+
+   Tangle and compile this file on save automatically:
+
+   #+BEGIN_SRC emacs-lisp
+   (defun tangle-init ()
+     "If the current buffer is 'init.org' the code-blocks are
+   tangled, and the tangled file is compiled."
+     (when (equal (buffer-file-name)
+                  (expand-file-name (concat user-emacs-directory "init.org")))
+       ;; Avoid running hooks when tangling.
+       (let ((prog-mode-hook nil))
+         (org-babel-tangle)
+         (byte-compile-file (concat user-emacs-directory "init.el")))))
+
+   (add-hook 'after-save-hook 'tangle-init)
+   #+END_SRC
+
+** Packages
+
+   Initialize package and add Melpa source
+
+   #+BEGIN_SRC emacs-lisp
+   (require 'package)
+   (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+       ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+       (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+       ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+       (when (< emacs-major-version 24)
+       ;; For important compatibility libraries like cl-lib
+   (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+   (package-initialize)
+   #+END_SRC
+
+   Install use-package.
+
+#+BEGIN_SRC emacs-lisp 
+ (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile (require 'use-package))
+
+(setq use-package-always-ensure t)
+#+END_SRC
+
+** Visuals
+
+   Load material theme, change window size a bit.
+
+   #+BEGIN_SRC emacs-lisp
+   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+   (load-theme 'material t)
+   (setq initial-frame-alist '((top . 50) (left . 100) (width . 145) (height . 50)))
+   (tool-bar-mode -1)
+   #+END_SRC
+
+   Highlight parens without delay.
+
+   #+BEGIN_SRC emacs-lisp
+   (setq show-paren-delay 0)
+   (show-paren-mode 1)
+   #+END_SRC
+
+   Wrap lines always.
+
+   #+BEGIN_SRC emacs-lisp
+   (global-visual-line-mode 1)
+   #+END_SRC
+
+** Defaults
+
+   Let all the file backups go to one global location instead of corresponding paths:
+
+   #+BEGIN_SRC emacs-lisp
+   (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+   #+END_SRC
+
+   Don't show the startup message or screen, show keystrokes right away, don't show the message in the scratch buffer, org-mode by default, sentences end with a single space, time in 24h format, wrap lines, disable the scroll bar and delete text when typing over selection.
+
+   #+BEGIN_SRC emacs-lisp
+   (setq
+     inhibit-startup-message t
+     inhibit-startup-screen t
+     echo-keystrokes 0.1
+     initial-scratch-message nil
+     initial-major-mode 'org-mode)
+
+   (visual-line-mode 1)
+   (scroll-bar-mode -1)
+   (delete-selection-mode 1)
+   #+END_SRC
+
+** Scrolling
+
+   Nicer scrolling behaviour. Thanks to [[https://zeekat.nl/articles/making-emacs-work-for-me.html][https://zeekat.nl/articles/making-emacs-work-for-me.html]]
+
+   #+BEGIN_SRC emacs-lisp
+   (setq scroll-margin 1
+      scroll-step 1
+      scroll-conservatively 10000
+      scroll-preserve-screen-position 1)
+
+   (setq mouse-wheel-follow-mouse 't)
+   (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+   #+END_SRC
+q
+* Org
+
+  Store all org files in =~/org=.
+
+  #+BEGIN_SRC emacs-lisp
+  (setq org-directory "~/org")
+  #+END_SRC
+
+  =<el TAB= creates an Emacs lisp code block and moves the cursor inside.
+
+  #+BEGIN_SRC emacs-lisp
+  (eval-after-load 'org
+    '(progn
+      (add-to-list 'org-structure-template-alist '("el" "#+BEGIN_SRC emacs-lisp \n?\n#+END_SRC"))))
+  #+END_SRC
+
+  Load langauges for Babel.
+
+#+BEGIN_SRC emacs-lisp 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (emacs-lisp . t)
+   (python . t)
+   (scheme . t)
+  ))
+
+#+END_SRC
+
+  Allow Org mode to execute scheme code through Guile/Racket.
+
+#+BEGIN_SRC emacs-lisp 
+  (add-hook 'scheme-mode-hook 'geiser-mode)
+  (setq geiser-default-implementation 'racket)
+#+END_SRC
+
+* Projectile
+#+BEGIN_SRC emacs-lisp 
+(use-package projectile
+  :config
+  (setq projectile-enable-caching t)
+  (define-key projectile-mode-map (kbd "s-P") 'projectile-command-map)
+  (projectile-mode +1))
+#+END_SRC
+
+* Helm
+
+#+BEGIN_SRC emacs-lisp 
+(use-package helm-swoop)
+(use-package helm
+  :config
+  (require 'helm-config)
+  (helm-mode 1)
+  (helm-autoresize-mode 1)
+  (setq helm-follow-mode-persistent t)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (setq helm-M-x-fuzzy-match t)
+  (setq helm-buffers-fuzzy-matching t)
+  (setq helm-recentf-fuzzy-match t)
+  (setq helm-apropos-fuzzy-match t)
+  (setq helm-split-window-inside-p t)
+  ;; (global-set-key (kbd "M-y") 'helm-show-kill-ring)
+  ;; (global-set-key (kbd "s-b") 'helm-mini)
+  ;; (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  ;; (global-set-key (kbd "s-f") 'helm-swoop)
+  )
+(setq helm-swoop-pre-input-function
+      (lambda () ""))
+
+(use-package helm-projectile
+  :config
+  (helm-projectile-on))
+
+(use-package helm-ag
+  :config
+  (global-set-key (kbd "s-F") 'helm-projectile-ag))
+
+(global-set-key (kbd "s-p") 'helm-projectile-find-file)
+#+END_SRC
