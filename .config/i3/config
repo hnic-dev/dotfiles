@@ -200,3 +200,5 @@ exec --no-startup-id nm-applet
 #gaps inner 5
 #gaps outer 5
 default_border none
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5
